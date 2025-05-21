@@ -26,8 +26,10 @@ function findSysTrayPanel() {
 function togglePanelVisibility(panel) {
     const newValue = panel.hiding === "none" || panel.hiding === "windowsgobelow" 
         ? "dodgewindows"
-        : "windowsgobelow"
-    
+        : panel.lengthMode === "fill" 
+            ? "none"
+            : "windowsgobelow" 
+
     print("Changed panel.hiding:    " + panel.hiding + " -> " + newValue)
     panel.hiding = newValue
 }
