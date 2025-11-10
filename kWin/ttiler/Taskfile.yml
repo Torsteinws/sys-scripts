@@ -1,0 +1,59 @@
+# https://taskfile.dev
+version: '3'
+
+tasks:
+  clean:
+    cmds:
+      - rm -rvf build
+      # - rm -rvf node_modules
+  
+  install:
+    deps:
+      - pack
+    cmds:
+      - echo "Not implemented..." && exit 1
+
+  uninstall:
+    cmds:
+      - echo "Not implemented..." && exit 1
+
+  pack:
+    deps:
+      - build
+    cmds:
+      - echo "Not implemented..." && exit 1
+
+  run:
+    deps: [build-bundle]
+    cmds:
+      - qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$(cat build/bundle/bundle.js)"
+
+  build-bundle:
+    aliases: [build]
+    deps: [build-ts]
+    cmds:
+      - npx rollup --config
+    sources:
+      - build/tsc/**/*.js
+    generates:
+      - build/bundle/**/* 
+
+  build-ts:
+    deps: [install-deps]
+    cmds:
+      - npx tsc
+      - npx rollup --config
+    sources:
+      - src/**/*.ts
+    generates:
+      - "build/tsc/**/*"
+
+  install-deps:
+    cmds:
+      - npm install
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - node_modules/**/*
+
