@@ -1,59 +1,81 @@
 # https://taskfile.dev
-version: '3'
+version: "3"
+
+vars:
+    PROJECT_NAME: "ttiler"
+    PACKAGE_DIR: "build/package"
 
 tasks:
-  clean:
-    cmds:
-      - rm -rvf build
-      # - rm -rvf node_modules
-  
-  install:
-    deps:
-      - pack
-    cmds:
-      - echo "Not implemented..." && exit 1
+    watch:
+        aliases: [log]
+        cmds:
+            - journalctl -f -t kwin_wayland_wrapper --grep="js:"
 
-  uninstall:
-    cmds:
-      - echo "Not implemented..." && exit 1
+    install:
+        deps: [pack]
+        cmds:
+            - task: set-enable
+              vars: { ENABLE: false }
+            - task: uninstall
+            - "kpackagetool6 -t KWin/Script --install {{.PACKAGE_DIR}}"
+            - task: set-enable
+              vars: { ENABLE: true }
 
-  pack:
-    deps:
-      - build
-    cmds:
-      - echo "Not implemented..." && exit 1
+    uninstall:
+        cmds:
+            - task: set-enable
+              vars: { ENABLE: false }
+            - echo "Waiting for kwin to disable the script..."
+              && sleep 0.5s
+            - echo "Removing shortcuts for disabled kwin scripts..."
+              && echo -n " - Did remove any shortcuts..."
+              && qdbus org.kde.kglobalaccel /component/kwin org.kde.kglobalaccel.Component.cleanUp
+            - "kpackagetool6 -t KWin/Script --remove {{.PROJECT_NAME}}"
+        status:
+            # Throw error if already installed, otherwise suppress all errors (any error will cancel the task)
+            - "kpackagetool6 -t KWin/Script --show {{.PROJECT_NAME}} && exit 1 || exit 0"
 
-  run:
-    deps: [build-bundle]
-    cmds:
-      - qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$(cat build/bundle/bundle.js)"
+    set-enable:
+        label: "set-enable: {{.ENABLE}}"
+        internal: true
+        run: when_changed
+        requires:
+            vars:
+                - name: ENABLE
+                  enum: [true, false]
+        cmds:
+            - "kwriteconfig6 --file kwinrc --group Plugins --key {{.PROJECT_NAME}}Enabled {{.ENABLE}}"
+            - qdbus org.kde.KWin /KWin reconfigure
 
-  build-bundle:
-    aliases: [build]
-    deps: [build-ts]
-    cmds:
-      - npx rollup --config
-    sources:
-      - build/tsc/**/*.js
-    generates:
-      - build/bundle/**/* 
+    package:
+        aliases: [pack]
+        deps: [build]
+        cmds:
+            - mkdir -p "{{.PACKAGE_DIR}}/contents/code"
+            - cp -f metadata.json "{{.PACKAGE_DIR}}/metadata.json"
+            - cp -f build/bundle/bundle.js "{{.PACKAGE_DIR}}/contents/code/main.js"
+        sources:
+            - metadata.json
+            - build/bundle/bundle.js
+        generates:
+            - "{{.PACKAGE_DIR}}/**/*"
 
-  build-ts:
-    deps: [install-deps]
-    cmds:
-      - npx tsc
-      - npx rollup --config
-    sources:
-      - src/**/*.ts
-    generates:
-      - "build/tsc/**/*"
+    clean:
+        cmds:
+            - rm -rvf build
 
-  install-deps:
-    cmds:
-      - npm install
-    sources:
-      - package.json
-      - package-lock.json
-    generates:
-      - node_modules/**/*
+    build:
+        deps: [install-deps]
+        cmds:
+            - cmd: npx tsc
+              ignore_error: true
+            - npx rollup --config
 
+    install-deps:
+        cmds:
+            - npm install
+        sources:
+            - package.json
+            - package-lock.json
+        generates:
+            - node_modules/**/*

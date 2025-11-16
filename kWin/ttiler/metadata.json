@@ -1,0 +1,20 @@
+{
+    "KPlugin": {
+        "Name": "ttiler",
+        "Description": "Custom tiler for my desktop setup",
+        "Icon": "preferences-system-windows",
+        "Authors": [
+            {
+                "Email": "git@torsteinws.no",
+                "Name": "Torstein Wilhelmsen Sandvik"
+            }
+        ],
+        "Id": "ttiler",
+        "Version": "1.0",
+        "License": "MIT",
+        "Website": "https://github.com/Torsteinws/sys-scripts"
+    },
+    "X-Plasma-API": "javascript",
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
+}
