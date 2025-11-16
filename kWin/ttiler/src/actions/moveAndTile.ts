@@ -71,6 +71,9 @@ const desktops = {
 
 function debug() {
     // moveAndTile(desktops.browser1)
+    // workspace.stackingOrder.forEach((window) => {
+    //     print(window.desktops[0]?.x11DesktopNumber, " | ", window.desktopFileName)
+    // })
 }
 
 function moveAndTile(srcDesktop: Desktop) {
@@ -91,6 +94,7 @@ function moveAndTile(srcDesktop: Desktop) {
 function syncWindows() {
     clearWindowTracking()
     const firefoxWindows: KWin.Window[] = []
+    const otherWindows: KWin.Window[] = []
 
     // For each open window
     workspace.stackingOrder.forEach((window) => {
@@ -101,11 +105,23 @@ function syncWindows() {
             case "signal":
                 desktops.signal.window = window
                 break
-            case "firefox_firefox":
-                firefoxWindows.push(window)
+            case "systemsettings":
+                desktops.settings.window = window
                 break
             case "com.mitchellh.ghostty":
                 desktops.terminal.window = window
+                break
+            case "code_code":
+                desktops.notes.window = window
+                break
+            case "org.kde.dolphin":
+                desktops.fileExplorer.window = window
+                break
+            case "firefox_firefox":
+                firefoxWindows.push(window)
+                break
+            default:
+                otherWindows.push(window)
                 break
         }
     })
@@ -130,6 +146,13 @@ function syncWindows() {
                 break
         }
     })
+
+    otherWindows.forEach((window) => {
+        if (window.desktops[0]?.x11DesktopNumber === desktops.randomAccess.index) {
+            desktops.randomAccess.window = window
+        }
+    })
+
     print("Prepare desktops for movement and tiling with ttiler")
 }
 
