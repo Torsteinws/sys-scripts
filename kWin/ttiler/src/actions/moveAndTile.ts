@@ -91,6 +91,113 @@ function moveAndTile(srcDesktop: Desktop) {
     workspace.slotWindowQuickTileLeft()
 }
 
+function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
+    const targetDesktop = workspace.desktops[targetIndex - 1]
+    if (!targetDesktop)
+        throw `Tried to move window "${window.desktopFileName}" to desktop at "${targetIndex}", but desktop index was out of bounds`
+
+    if (!window.moveable)
+        throw `Could not move window "${window.desktopFileName} to desktop "${targetDesktop.name}" because window was immovable`
+
+    window.desktops = [targetDesktop]
+}
+
+function restoreCurrentDesktop() {
+    const currentIndex = workspace.currentDesktop.x11DesktopNumber
+    const currentWindows = getWindowsAtDesktopNumber(currentIndex)
+
+    print("Current index: ", currentIndex, ", number of windows: ", currentWindows.length)
+    for (let i = 0; i < currentWindows.length; i++) {
+        const window = currentWindows[i]!
+        const desktop = getDesktopFromWindow(window)
+
+        print("Moving window ", window.desktopFileName, " to ", desktop?.index)
+        if (!desktop) continue
+
+        moveWindowToIndex(window, desktop.index)
+        window.setMaximize(true, true)
+        print("Finished moving window")
+    }
+}
+
+function getCurrentDesktop(): Desktop {
+    const index = workspace.currentDesktop.x11DesktopNumber
+    return getDesktopFromIndex(index)
+}
+
+function getDesktopFromIndex(index: number): Desktop {
+    switch (index) {
+        case desktops.spotify.index:
+            return desktops.spotify
+        case desktops.signal.index:
+            return desktops.signal
+        case desktops.settings.index:
+            return desktops.settings
+        case desktops.vpnAndUtils.index:
+            return desktops.vpnAndUtils
+        case desktops.browser1.index:
+            return desktops.browser1
+        case desktops.terminal.index:
+            return desktops.terminal
+        case desktops.browser2.index:
+            return desktops.browser2
+        case desktops.browser3.index:
+            return desktops.browser3
+        case desktops.notes.index:
+            return desktops.notes
+        case desktops.fileExplorer.index:
+            return desktops.fileExplorer
+        case desktops.randomAccess.index:
+            return desktops.randomAccess
+        case desktops.cheatsheet.index:
+            return desktops.cheatsheet
+        default:
+            throw `Could not find current desktop from desktopIndex "${index}"`
+    }
+}
+
+function getDesktopFromWindow(window: KWin.Window): Desktop | undefined {
+    switch (window) {
+        case desktops.spotify.window:
+            return desktops.spotify
+        case desktops.signal.window:
+            return desktops.signal
+        case desktops.settings.window:
+            return desktops.settings
+        case desktops.vpnAndUtils.window:
+            return desktops.vpnAndUtils
+        case desktops.browser1.window:
+            return desktops.browser1
+        case desktops.terminal.window:
+            return desktops.terminal
+        case desktops.browser2.window:
+            return desktops.browser2
+        case desktops.browser3.window:
+            return desktops.browser3
+        case desktops.notes.window:
+            return desktops.notes
+        case desktops.fileExplorer.window:
+            return desktops.fileExplorer
+        case desktops.randomAccess.window:
+            return desktops.randomAccess
+        case desktops.cheatsheet.window:
+            return desktops.cheatsheet
+        default:
+            return undefined
+    }
+}
+
+function getWindowsAtDesktopNumber(index: number): KWin.Window[] {
+    const openWindows: KWin.Window[] = []
+    workspace.stackingOrder.forEach((window) => {
+        const indexMatches = window.desktops.filter((desktop) => desktop.x11DesktopNumber === index).length >= 0
+        if (indexMatches) {
+            openWindows.push(window)
+        }
+    })
+    return openWindows
+}
+
 function syncWindows() {
     clearWindowTracking()
     const firefoxWindows: KWin.Window[] = []
@@ -99,6 +206,11 @@ function syncWindows() {
     // For each open window
     workspace.stackingOrder.forEach((window) => {
         switch (window.desktopFileName) {
+            case "org.kde.xwaylandvideobridge":
+            case undefined:
+            case "":
+                // Do nothing, this is internal to kde
+                break
             case "spotify_spotify":
                 desktops.spotify.window = window
                 break
@@ -107,6 +219,14 @@ function syncWindows() {
                 break
             case "systemsettings":
                 desktops.settings.window = window
+                break
+            case "org.qbittorrent.qBittorrent":
+                // Ignore for now
+                // desktops.vpnAndUtils.window = window
+                break
+            case "protonvpn-app":
+                // Ignore progon vpn, it is not useful for me here
+                // desktops.vpnAndUtils.window = window
                 break
             case "com.mitchellh.ghostty":
                 desktops.terminal.window = window
@@ -148,20 +268,27 @@ function syncWindows() {
     })
 
     otherWindows.forEach((window) => {
+        print(window.desktopFileName)
         if (window.desktops[0]?.x11DesktopNumber === desktops.randomAccess.index) {
             desktops.randomAccess.window = window
         }
     })
 
-    print("Prepare desktops for movement and tiling with ttiler")
+    print("Synced desktops for movement and tiling with ttiler")
 }
 
 function clearWindowTracking() {
     desktops.spotify.window = undefined
     desktops.signal.window = undefined
+    desktops.settings.window = undefined
+    desktops.vpnAndUtils.window = undefined
     desktops.browser1.window = undefined
     desktops.terminal.window = undefined
     desktops.browser2.window = undefined
+    desktops.browser3.window = undefined
+    desktops.notes.window = undefined
+    desktops.fileExplorer.window = undefined
+    desktops.randomAccess.window = undefined
     desktops.cheatsheet.window = undefined
 }
 
@@ -169,7 +296,7 @@ function createMoveAndTileShortcut(key: string, desktop: Desktop): Shortcut {
     return {
         title: `moveAndTile.${desktop.name.replace(" ", "_")}`,
         text: `Move window from ${desktop.name} to the current desktop and then tile it to the left`,
-        keySequence: `Meta+Ctrl+Alt+Shift+${key}`,
+        keySequence: key.length > 1 ? key : `Meta+Ctrl+Alt+Shift+${key}`,
         fn: () => moveAndTile(desktop),
     }
 }
@@ -184,16 +311,27 @@ const shortcuts: Shortcut[] = [
     {
         title: "syncWindows",
         text: "Sync window management",
-        keySequence: "Meta+Ctrl+Alt+Return",
+        keySequence: "Meta+Ctrl+Alt+Shift+Space",
         fn: syncWindows,
     },
+    {
+        title: "restoreCurrentDesktop",
+        text: "Restore windows on the current desktop to their original location",
+        keySequence: "Meta+Ctrl+Alt+Shift+Return",
+        fn: restoreCurrentDesktop,
+    },
     createMoveAndTileShortcut("u", desktops.spotify),
-    createMoveAndTileShortcut("i", desktops.signal),
+    createMoveAndTileShortcut("h", desktops.signal),
+    createMoveAndTileShortcut("o", desktops.settings),
+    createMoveAndTileShortcut("p", desktops.vpnAndUtils),
     createMoveAndTileShortcut("j", desktops.browser1),
     createMoveAndTileShortcut("k", desktops.terminal),
     createMoveAndTileShortcut("l", desktops.browser2),
     createMoveAndTileShortcut("ø", desktops.browser3),
-    createMoveAndTileShortcut("-", desktops.cheatsheet),
+    createMoveAndTileShortcut("m", desktops.notes),
+    createMoveAndTileShortcut("Meta+Ctrl+Alt+;", desktops.fileExplorer),
+    createMoveAndTileShortcut("Meta+Ctrl+Alt+:", desktops.randomAccess),
+    createMoveAndTileShortcut("Meta+Ctrl+Alt+_", desktops.cheatsheet),
 ]
 
 export default { shortcuts }
