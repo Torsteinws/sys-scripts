@@ -1,82 +1,9 @@
-import type { Shortcut } from "../types/shortcut.js"
+import type { Shortcut } from "../../types/shortcut.js"
+import { type DesktopEntry, desktops, getDesktopFromWindow } from "./Desktop.js"
 
-type Desktop = {
-    readonly name: string
-    readonly index: number
-    window: KWin.Window | undefined
-}
+function debug() {}
 
-const desktops = {
-    spotify: {
-        name: "Spotify" as const,
-        index: 1 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    signal: {
-        name: "Signal" as const,
-        index: 2 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    settings: {
-        name: "Settings" as const,
-        index: 3 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    vpnAndUtils: {
-        name: "Vpn + Utils" as const,
-        index: 4 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    browser1: {
-        name: "Browser 1" as const,
-        index: 5 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    terminal: {
-        name: "Terminal" as const,
-        index: 6 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    browser2: {
-        name: "Browser 2" as const,
-        index: 7 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    browser3: {
-        name: "Browser 3" as const,
-        index: 8 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    notes: {
-        name: "Notes" as const,
-        index: 9 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    fileExplorer: {
-        name: "File Explorer" as const,
-        index: 10 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    randomAccess: {
-        name: "Random Access" as const,
-        index: 11 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-    cheatsheet: {
-        name: "Cheatsheet" as const,
-        index: 12 as const,
-        window: undefined as KWin.Window | undefined,
-    } satisfies Desktop,
-} as const
-
-function debug() {
-    // moveAndTile(desktops.browser1)
-    // workspace.stackingOrder.forEach((window) => {
-    //     print(window.desktops[0]?.x11DesktopNumber, " | ", window.desktopFileName)
-    // })
-}
-
-function moveAndTile(srcDesktop: Desktop) {
+function moveAndTile(srcDesktop: DesktopEntry) {
     if (srcDesktop.window === undefined) return print(`Did not find any window on "${srcDesktop.name}". Exiting...`)
     if (!srcDesktop.window.moveable) return print(`Can't move window away from "${srcDesktop.name}. Exiting...`)
 
@@ -117,73 +44,6 @@ function restoreCurrentDesktop() {
         moveWindowToIndex(window, desktop.index)
         window.setMaximize(true, true)
         print("Finished moving window")
-    }
-}
-
-function getCurrentDesktop(): Desktop {
-    const index = workspace.currentDesktop.x11DesktopNumber
-    return getDesktopFromIndex(index)
-}
-
-function getDesktopFromIndex(index: number): Desktop {
-    switch (index) {
-        case desktops.spotify.index:
-            return desktops.spotify
-        case desktops.signal.index:
-            return desktops.signal
-        case desktops.settings.index:
-            return desktops.settings
-        case desktops.vpnAndUtils.index:
-            return desktops.vpnAndUtils
-        case desktops.browser1.index:
-            return desktops.browser1
-        case desktops.terminal.index:
-            return desktops.terminal
-        case desktops.browser2.index:
-            return desktops.browser2
-        case desktops.browser3.index:
-            return desktops.browser3
-        case desktops.notes.index:
-            return desktops.notes
-        case desktops.fileExplorer.index:
-            return desktops.fileExplorer
-        case desktops.randomAccess.index:
-            return desktops.randomAccess
-        case desktops.cheatsheet.index:
-            return desktops.cheatsheet
-        default:
-            throw `Could not find current desktop from desktopIndex "${index}"`
-    }
-}
-
-function getDesktopFromWindow(window: KWin.Window): Desktop | undefined {
-    switch (window) {
-        case desktops.spotify.window:
-            return desktops.spotify
-        case desktops.signal.window:
-            return desktops.signal
-        case desktops.settings.window:
-            return desktops.settings
-        case desktops.vpnAndUtils.window:
-            return desktops.vpnAndUtils
-        case desktops.browser1.window:
-            return desktops.browser1
-        case desktops.terminal.window:
-            return desktops.terminal
-        case desktops.browser2.window:
-            return desktops.browser2
-        case desktops.browser3.window:
-            return desktops.browser3
-        case desktops.notes.window:
-            return desktops.notes
-        case desktops.fileExplorer.window:
-            return desktops.fileExplorer
-        case desktops.randomAccess.window:
-            return desktops.randomAccess
-        case desktops.cheatsheet.window:
-            return desktops.cheatsheet
-        default:
-            return undefined
     }
 }
 
@@ -292,7 +152,7 @@ function clearWindowTracking() {
     desktops.cheatsheet.window = undefined
 }
 
-function createMoveAndTileShortcut(key: string, desktop: Desktop): Shortcut {
+function createMoveAndTileShortcut(key: string, desktop: DesktopEntry): Shortcut {
     return {
         title: `moveAndTile.${desktop.name.replace(" ", "_")}`,
         text: `Move window from ${desktop.name} to the current desktop and then tile it to the left`,
