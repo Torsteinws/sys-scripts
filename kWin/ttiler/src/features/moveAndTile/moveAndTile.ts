@@ -11,9 +11,10 @@ function moveAndTile(srcDesktop: DesktopEntry) {
     srcDesktop.window.desktops = [workspace.currentDesktop]
 
     // Find tile layout
-    const tileManager = workspace.tilingForScreen(workspace.activeScreen)
-    const leftTile = tileManager.bestTileForPosition(0, 0)
-    const rightTile = tileManager.bestTileForPosition(9999, 0)
+    const screen = workspace.activeScreen
+    const tileManager = workspace.tilingForScreen(screen)
+    const leftTile = tileManager.bestTileForPosition(screen.geometry.left, screen.geometry.top)
+    const rightTile = tileManager.bestTileForPosition(screen.geometry.right, screen.geometry.top)
 
     // Tile current window to the right, tile source window to the left
     workspace.activeWindow.tile = leftTile
