@@ -66,8 +66,10 @@ function syncWindows() {
     const firefoxWindows: KWin.Window[] = []
     const otherWindows: KWin.Window[] = []
 
-    // For each open window (from least visible to most visible order)
-    workspace.stackingOrder.reverse().forEach((window) => {
+    // List of all normal windows (ordered by least visible to most visible)
+    const normalWindows = workspace.stackingOrder.filter((win) => win.normalWindow && !win.onAllDesktops).reverse()
+
+    normalWindows.forEach((window) => {
         switch (window.desktopFileName) {
             case "org.kde.xwaylandvideobridge":
             case undefined:
