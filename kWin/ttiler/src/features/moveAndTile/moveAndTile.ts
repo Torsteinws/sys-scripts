@@ -7,15 +7,20 @@ function moveAndTile(srcDesktop: DesktopEntry) {
     if (srcDesktop.window === undefined) return print(`Did not find any window on "${srcDesktop.name}". Exiting...`)
     if (!srcDesktop.window.moveable) return print(`Can't move window away from "${srcDesktop.name}. Exiting...`)
 
+    // Move window to current desktop
     srcDesktop.window.desktops = [workspace.currentDesktop]
 
-    const currentWindow = workspace.activeWindow
+    // Find tile layout
+    const tileManager = workspace.tilingForScreen(workspace.activeScreen)
+    const leftTile = tileManager.bestTileForPosition(0, 0)
+    const rightTile = tileManager.bestTileForPosition(9999, 0)
 
-    workspace.activeWindow = srcDesktop.window
-    workspace.slotWindowQuickTileRight()
+    // Tile current window to the right, tile source window to the left
+    workspace.activeWindow.tile = leftTile
+    srcDesktop.window.tile = rightTile
 
-    workspace.activeWindow = currentWindow
-    workspace.slotWindowQuickTileLeft()
+    workspace.activeWindow.noBorder = false
+    srcDesktop.window.noBorder = false
 }
 
 function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
@@ -33,17 +38,15 @@ function restoreCurrentDesktop() {
     const currentIndex = workspace.currentDesktop.x11DesktopNumber
     const currentWindows = getWindowsAtDesktopNumber(currentIndex)
 
-    print("Current index: ", currentIndex, ", number of windows: ", currentWindows.length)
     for (let i = 0; i < currentWindows.length; i++) {
         const window = currentWindows[i]!
         const desktop = getDesktopFromWindow(window)
 
-        print("Moving window ", window.desktopFileName, " to ", desktop?.index)
         if (!desktop) continue
 
         moveWindowToIndex(window, desktop.index)
         window.setMaximize(true, true)
-        print("Finished moving window")
+        window.noBorder = true
     }
 }
 
@@ -63,8 +66,8 @@ function syncWindows() {
     const firefoxWindows: KWin.Window[] = []
     const otherWindows: KWin.Window[] = []
 
-    // For each open window
-    workspace.stackingOrder.forEach((window) => {
+    // For each open window (from least visible to most visible order)
+    workspace.stackingOrder.reverse().forEach((window) => {
         switch (window.desktopFileName) {
             case "org.kde.xwaylandvideobridge":
             case undefined:
@@ -128,7 +131,6 @@ function syncWindows() {
     })
 
     otherWindows.forEach((window) => {
-        print(window.desktopFileName)
         if (window.desktops[0]?.x11DesktopNumber === desktops.randomAccess.index) {
             desktops.randomAccess.window = window
         }
@@ -163,7 +165,7 @@ function createMoveAndTileShortcut(key: string, desktop: DesktopEntry): Shortcut
 
 const shortcuts: Shortcut[] = [
     {
-        title: "Debug.MoveAndTile",
+        title: "MoveAndTile.Debug",
         text: "Debug functions in MoveAndTile.ts",
         keySequence: "Meta+m",
         fn: debug,
