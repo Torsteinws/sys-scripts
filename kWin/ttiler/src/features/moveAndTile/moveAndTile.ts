@@ -1,6 +1,6 @@
 import type { Shortcut } from "../../types/shortcut.js"
 import { utils } from "../../utils/index.js"
-import { type DesktopEntry, desktops, getDesktopFromWindow } from "./Desktop.js"
+import { type DesktopEntry, desktops, getDesktopFromIndex, getDesktopFromWindow } from "./Desktop.js"
 
 function debug() {}
 
@@ -40,10 +40,12 @@ function restoreCurrentDesktop() {
     const currentIndex = workspace.currentDesktop.x11DesktopNumber
     const currentWindows = getWindowsAtDesktopNumber(currentIndex)
     restoreWindows(currentWindows)
+    focusCurrentWindow()
 }
 
 function restoreAllDesktops() {
     restoreWindows(workspace.stackingOrder)
+    focusCurrentWindow()
 }
 
 function restoreWindows(windows: KWin.Window[]) {
@@ -68,6 +70,13 @@ function getWindowsAtDesktopNumber(index: number): KWin.Window[] {
         }
     })
     return openWindows
+}
+
+function focusCurrentWindow() {
+    const { window } = getDesktopFromIndex(workspace.currentDesktop.x11DesktopNumber)
+    if (window !== undefined) {
+        workspace.activeWindow = window
+    }
 }
 
 function syncWindows() {
