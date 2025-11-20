@@ -39,9 +39,16 @@ function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
 function restoreCurrentDesktop() {
     const currentIndex = workspace.currentDesktop.x11DesktopNumber
     const currentWindows = getWindowsAtDesktopNumber(currentIndex)
+    restoreWindows(currentWindows)
+}
 
-    for (let i = 0; i < currentWindows.length; i++) {
-        const window = currentWindows[i]!
+function restoreAllDesktops() {
+    restoreWindows(workspace.stackingOrder)
+}
+
+function restoreWindows(windows: KWin.Window[]) {
+    for (let i = 0; i < windows.length; i++) {
+        const window = windows[i]!
         const desktop = getDesktopFromWindow(window)
 
         if (!desktop) continue
@@ -55,7 +62,7 @@ function restoreCurrentDesktop() {
 function getWindowsAtDesktopNumber(index: number): KWin.Window[] {
     const openWindows: KWin.Window[] = []
     workspace.stackingOrder.forEach((window) => {
-        const indexMatches = window.desktops.filter((desktop) => desktop.x11DesktopNumber === index).length >= 0
+        const indexMatches = window.desktops.filter((desktop) => desktop.x11DesktopNumber === index).length > 0
         if (indexMatches) {
             openWindows.push(window)
         }
@@ -183,8 +190,14 @@ const shortcuts: Shortcut[] = [
     {
         title: "moveAndTile.restoreCurrentDesktop",
         text: "Restore windows on the current desktop to their original location",
-        keySequence: "Meta+Ctrl+Alt+Shift+Return",
+        keySequence: "Meta+Ctrl+Alt+Return",
         fn: restoreCurrentDesktop,
+    },
+    {
+        title: "moveAndTile.restoreAllDesktops",
+        text: "Restore all windows to their original desktop",
+        keySequence: "Meta+Ctrl+Alt+Shift+Return",
+        fn: restoreAllDesktops,
     },
     createMoveAndTileShortcut("u", desktops.spotify),
     createMoveAndTileShortcut("h", desktops.signal),
