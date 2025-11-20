@@ -1,10 +1,7 @@
 import type { Shortcut } from "../../types/shortcut.js"
 import { utils } from "../../utils/index.js"
 
-function debug() {
-    // workspace.showOutline(workspace.activeWindow.clientGeometry)
-    // print(displayWidth())
-}
+function debug() {}
 
 function adjustTileWidth(direction: "left" | "right") {
     const leftTile = getTile("left")
