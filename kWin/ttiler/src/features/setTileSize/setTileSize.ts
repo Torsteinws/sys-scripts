@@ -1,7 +1,10 @@
 import type { Shortcut } from "../../types/shortcut.js"
 import { utils } from "../../utils/index.js"
 
-function debug() {}
+function debug() {
+    // workspace.showOutline(workspace.activeWindow.clientGeometry)
+    // print(displayWidth())
+}
 
 function adjustTileWidth(direction: "left" | "right") {
     const leftTile = getTile("left")
@@ -72,22 +75,22 @@ function getTile(location: "left" | "right") {
 }
 
 const shortcuts: Shortcut[] = [
-    {
-        title: "setTileSize.Debug",
-        text: "Debug functions in setTileSize.ts",
-        keySequence: "Meta+m",
-        fn: debug,
-    },
+    // {
+    //     title: "setTileSize.Debug",
+    //     text: "Debug functions in setTileSize.ts",
+    //     keySequence: "Meta+m",
+    //     fn: debug,
+    // },
     {
         title: "setTileSize.adjustLeft",
         text: "Adjust the tile width in leftward direction",
-        keySequence: "Ctrl+Shift+h",
+        keySequence: "Ctrl+Alt+Shift+h",
         fn: () => adjustTileWidth("left"),
     },
     {
         title: "setTileSize.adjustRight",
         text: "Adjust the tile width in rightward direction",
-        keySequence: "Ctrl+Shift+l",
+        keySequence: "Ctrl+Alt+Shift+l",
         fn: () => adjustTileWidth("right"),
     },
     {
