@@ -10,10 +10,15 @@ declare namespace KWin {
 }
 
 declare type QRect = {
-    left: number
-    top: number
-    right: number
-    bottom: number
+    readonly left: number
+    readonly top: number
+    readonly right: number
+    readonly bottom: number
+
+    x: number
+    y: number
+    width: number
+    height: number
 }
 
 declare type QRectF = QRect

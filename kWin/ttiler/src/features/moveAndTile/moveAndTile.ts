@@ -168,20 +168,20 @@ function createMoveAndTileShortcut(key: string, desktop: DesktopEntry): Shortcut
 }
 
 const shortcuts: Shortcut[] = [
+    // {
+    //     title: "MoveAndTile.Debug",
+    //     text: "Debug functions in moveAndTile.ts",
+    //     keySequence: "Meta+m",
+    //     fn: debug,
+    // },
     {
-        title: "MoveAndTile.Debug",
-        text: "Debug functions in MoveAndTile.ts",
-        keySequence: "Meta+m",
-        fn: debug,
-    },
-    {
-        title: "syncWindows",
+        title: "moveAndTile.syncWindows",
         text: "Sync window management",
         keySequence: "Meta+Ctrl+Alt+Shift+Space",
         fn: syncWindows,
     },
     {
-        title: "restoreCurrentDesktop",
+        title: "moveAndTile.restoreCurrentDesktop",
         text: "Restore windows on the current desktop to their original location",
         keySequence: "Meta+Ctrl+Alt+Shift+Return",
         fn: restoreCurrentDesktop,

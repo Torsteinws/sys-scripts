@@ -1,8 +1,9 @@
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
+import setTileSize from "./features/setTileSize/setTileSize.js"
 import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
-const shortcuts: Shortcut[] = ([] as Shortcut[]).concat(moveAndTile.shortcuts)
+const shortcuts: Shortcut[] = ([] as Shortcut[]).concat(moveAndTile.shortcuts).concat(setTileSize.shortcuts)
 
 shortcuts.forEach((shortcut) => {
     const shortcutTitle = `ttiler.${shortcut.title}`
