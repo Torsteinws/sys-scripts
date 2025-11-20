@@ -1,4 +1,5 @@
 import type { Shortcut } from "../../types/shortcut.js"
+import { utils } from "../../utils/index.js"
 import { type DesktopEntry, desktops, getDesktopFromWindow } from "./Desktop.js"
 
 function debug() {}
@@ -139,7 +140,7 @@ function syncWindows() {
         }
     })
 
-    print("Synced desktops for movement and tiling with ttiler")
+    utils.showText("Synced windows", "data-success")
 }
 
 function clearWindowTracking() {

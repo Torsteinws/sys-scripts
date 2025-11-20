@@ -1,5 +1,6 @@
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import type { Shortcut } from "./types/shortcut.js"
+import { utils } from "./utils/index.js"
 
 const shortcuts: Shortcut[] = ([] as Shortcut[]).concat(moveAndTile.shortcuts)
 
@@ -20,5 +21,6 @@ function logErrors(fn: () => void) {
         fn()
     } catch (err) {
         print("[ERROR] " + err)
+        utils.showText(`${err}`, "dialog-error")
     }
 }
