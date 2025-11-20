@@ -13,19 +13,36 @@ function adjustTileWidth(direction: "left" | "right") {
     }
 }
 
-function resetTileWidth() {
+function resetTileChanges() {
     const leftTile = getTile("left")
     leftTile.relativeGeometry.width = 0.62
+    leftTile.parent.padding = 2
 }
 
-function resetTileWidthAllDesktops() {
+function resetTileChangesAllDesktops() {
     const originalDesktop = workspace.currentDesktop
     workspace.desktops.forEach((desktop) => {
         workspace.currentDesktop = desktop
-        resetTileWidth()
+        resetTileChanges()
     })
     workspace.currentDesktop = originalDesktop
     utils.showText("Reset all tiling layouts", "dialog-positive")
+}
+
+function adjustTilePadding(adjustment: "increment" | "decrement") {
+    const tilingManager = workspace.tilingForScreen(workspace.activeScreen)
+    const tile = tilingManager.rootTile
+
+    const delta = 1
+    if (adjustment === "increment") {
+        tile.padding += delta
+    } else {
+        tile.padding -= delta
+    }
+
+    if (tile.padding < 0) {
+        tile.padding = 0
+    }
 }
 
 function getTile(location: "left" | "right") {
@@ -58,13 +75,25 @@ const shortcuts: Shortcut[] = [
         title: "setTileSize.resetTileWidth",
         text: "Reset the tile width on the current virtual desktop",
         keySequence: "Meta+Ctrl+Alt+'",
-        fn: resetTileWidth,
+        fn: resetTileChanges,
     },
     {
         title: "setTileSize.resetTileWidthAllDesktops",
         text: "Reset the tile width on all virtual desktops",
         keySequence: "Meta+Ctrl+Alt+*",
-        fn: resetTileWidthAllDesktops,
+        fn: resetTileChangesAllDesktops,
+    },
+    {
+        title: "setTileSize.incrementPadding",
+        text: "Increment the padding in the tiling layout",
+        keySequence: "Meta+Ctrl+Alt++",
+        fn: () => adjustTilePadding("increment"),
+    },
+    {
+        title: "setTileSize.decrementPadding",
+        text: "Decrement the padding in the tiling layout",
+        keySequence: "Meta+Ctrl+Alt+?",
+        fn: () => adjustTilePadding("decrement"),
     },
 ]
 
