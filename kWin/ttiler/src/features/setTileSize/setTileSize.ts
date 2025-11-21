@@ -5,7 +5,7 @@ function debug() {}
 
 function adjustTileWidth(direction: "left" | "right") {
     const leftTile = getTile("left")
-    const delta = 0.02
+    const delta = 0.015
     if (direction === "left") {
         leftTile.relativeGeometry.width -= delta
     } else {
@@ -16,7 +16,7 @@ function adjustTileWidth(direction: "left" | "right") {
 function resetTileChanges() {
     const leftTile = getTile("left")
     leftTile.relativeGeometry.width = 0.62
-    leftTile.parent.padding = 2
+    leftTile.parent.padding = 7
 }
 
 function resetTileChangesAllDesktops() {
