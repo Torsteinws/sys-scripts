@@ -169,7 +169,7 @@ function syncWindows() {
         }
     })
 
-    utils.showText("Synced windows", "data-success")
+    utils.showText("Synced windows", "dialog-positive")
 }
 
 function clearWindowTracking() {
