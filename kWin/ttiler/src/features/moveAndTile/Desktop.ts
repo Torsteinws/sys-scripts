@@ -5,64 +5,79 @@ export type DesktopEntry = {
 }
 
 export const desktops = {
+    unknown1: {
+        name: "unknown1" as const,
+        index: 1 as const,
+        window: undefined as KWin.Window | undefined,
+    } satisfies DesktopEntry,
     spotify: {
         name: "Spotify" as const,
-        index: 1 as const,
+        index: 2 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     signal: {
         name: "Signal" as const,
-        index: 2 as const,
+        index: 3 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     settings: {
         name: "Settings" as const,
-        index: 3 as const,
+        index: 4 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     vpnAndUtils: {
         name: "Vpn + Utils" as const,
-        index: 4 as const,
+        index: 5 as const,
+        window: undefined as KWin.Window | undefined,
+    } satisfies DesktopEntry,
+    unknown2: {
+        name: "unknown2" as const,
+        index: 6 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     browser1: {
         name: "Browser 1" as const,
-        index: 5 as const,
+        index: 7 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     terminal: {
         name: "Terminal" as const,
-        index: 6 as const,
+        index: 8 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     browser2: {
         name: "Browser 2" as const,
-        index: 7 as const,
+        index: 9 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     browser3: {
         name: "Browser 3" as const,
-        index: 8 as const,
+        index: 10 as const,
+        window: undefined as KWin.Window | undefined,
+    } satisfies DesktopEntry,
+    unknown3: {
+        name: "unknown3" as const,
+        index: 11 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     notes: {
         name: "Notes" as const,
-        index: 9 as const,
+        index: 12 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     fileExplorer: {
         name: "File Explorer" as const,
-        index: 10 as const,
+        index: 13 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     randomAccess: {
         name: "Random Access" as const,
-        index: 11 as const,
+        index: 14 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
     cheatsheet: {
         name: "Cheatsheet" as const,
-        index: 12 as const,
+        index: 15 as const,
         window: undefined as KWin.Window | undefined,
     } satisfies DesktopEntry,
 } as const
@@ -74,6 +89,8 @@ export function getCurrentDesktop(): DesktopEntry {
 
 export function getDesktopFromIndex(index: number): DesktopEntry {
     switch (index) {
+        case desktops.unknown1.index:
+            return desktops.unknown1
         case desktops.spotify.index:
             return desktops.spotify
         case desktops.signal.index:
@@ -82,6 +99,8 @@ export function getDesktopFromIndex(index: number): DesktopEntry {
             return desktops.settings
         case desktops.vpnAndUtils.index:
             return desktops.vpnAndUtils
+        case desktops.unknown2.index:
+            return desktops.unknown2
         case desktops.browser1.index:
             return desktops.browser1
         case desktops.terminal.index:
@@ -90,6 +109,8 @@ export function getDesktopFromIndex(index: number): DesktopEntry {
             return desktops.browser2
         case desktops.browser3.index:
             return desktops.browser3
+        case desktops.unknown3.index:
+            return desktops.unknown3
         case desktops.notes.index:
             return desktops.notes
         case desktops.fileExplorer.index:
@@ -105,6 +126,11 @@ export function getDesktopFromIndex(index: number): DesktopEntry {
 
 export function getDesktopFromWindow(window: KWin.Window): DesktopEntry | undefined {
     switch (window) {
+        default:
+        case undefined:
+            return undefined
+        case desktops.unknown1.window:
+            return desktops.unknown1
         case desktops.spotify.window:
             return desktops.spotify
         case desktops.signal.window:
@@ -113,6 +139,8 @@ export function getDesktopFromWindow(window: KWin.Window): DesktopEntry | undefi
             return desktops.settings
         case desktops.vpnAndUtils.window:
             return desktops.vpnAndUtils
+        case desktops.unknown2.window:
+            return desktops.unknown2
         case desktops.browser1.window:
             return desktops.browser1
         case desktops.terminal.window:
@@ -121,6 +149,8 @@ export function getDesktopFromWindow(window: KWin.Window): DesktopEntry | undefi
             return desktops.browser2
         case desktops.browser3.window:
             return desktops.browser3
+        case desktops.unknown3.window:
+            return desktops.unknown3
         case desktops.notes.window:
             return desktops.notes
         case desktops.fileExplorer.window:
@@ -129,7 +159,5 @@ export function getDesktopFromWindow(window: KWin.Window): DesktopEntry | undefi
             return desktops.randomAccess
         case desktops.cheatsheet.window:
             return desktops.cheatsheet
-        default:
-            return undefined
     }
 }

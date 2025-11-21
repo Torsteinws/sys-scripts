@@ -85,7 +85,7 @@ function syncWindows() {
     const otherWindows: KWin.Window[] = []
 
     // List of all normal windows (ordered by least visible to most visible)
-    const normalWindows = workspace.stackingOrder.filter((win) => win.normalWindow && !win.onAllDesktops).reverse()
+    const normalWindows = workspace.stackingOrder.filter((win) => win.normalWindow && !win.onAllDesktops)
 
     normalWindows.forEach((window) => {
         switch (window.desktopFileName) {
@@ -131,8 +131,7 @@ function syncWindows() {
 
     // For each open firefox window
     firefoxWindows.forEach((window) => {
-        if (window.desktops.length <= 0) return
-        switch (window.desktops[0]!.x11DesktopNumber) {
+        switch (window.desktops[0]?.x11DesktopNumber) {
             case desktops.browser1.index:
                 desktops.browser1.window = window
                 break
@@ -151,8 +150,22 @@ function syncWindows() {
     })
 
     otherWindows.forEach((window) => {
-        if (window.desktops[0]?.x11DesktopNumber === desktops.randomAccess.index) {
-            desktops.randomAccess.window = window
+        switch (window.desktops[0]?.x11DesktopNumber) {
+            default:
+            case undefined:
+                break
+            case desktops.unknown1.index:
+                desktops.unknown1.window = window
+                break
+            case desktops.unknown2.index:
+                desktops.unknown2.window = window
+                break
+            case desktops.unknown3.index:
+                desktops.unknown3.window = window
+                break
+            case desktops.randomAccess.index:
+                desktops.randomAccess.window = window
+                break
         }
     })
 
@@ -160,14 +173,17 @@ function syncWindows() {
 }
 
 function clearWindowTracking() {
+    desktops.unknown1.window = undefined
     desktops.spotify.window = undefined
     desktops.signal.window = undefined
     desktops.settings.window = undefined
     desktops.vpnAndUtils.window = undefined
+    desktops.unknown2.window = undefined
     desktops.browser1.window = undefined
     desktops.terminal.window = undefined
     desktops.browser2.window = undefined
     desktops.browser3.window = undefined
+    desktops.unknown3.window = undefined
     desktops.notes.window = undefined
     desktops.fileExplorer.window = undefined
     desktops.randomAccess.window = undefined
@@ -208,14 +224,17 @@ const shortcuts: Shortcut[] = [
         keySequence: "Meta+Ctrl+Alt+Shift+Return",
         fn: restoreAllDesktops,
     },
+    createMoveAndTileShortcut("y", desktops.unknown1),
     createMoveAndTileShortcut("u", desktops.spotify),
     createMoveAndTileShortcut("i", desktops.signal),
     createMoveAndTileShortcut("o", desktops.settings),
     createMoveAndTileShortcut("p", desktops.vpnAndUtils),
+    createMoveAndTileShortcut("h", desktops.unknown2),
     createMoveAndTileShortcut("j", desktops.browser1),
     createMoveAndTileShortcut("k", desktops.terminal),
     createMoveAndTileShortcut("l", desktops.browser2),
     createMoveAndTileShortcut("ø", desktops.browser3),
+    createMoveAndTileShortcut("n", desktops.unknown3),
     createMoveAndTileShortcut("m", desktops.notes),
     createMoveAndTileShortcut("Meta+Ctrl+Alt+;", desktops.fileExplorer),
     createMoveAndTileShortcut("Meta+Ctrl+Alt+:", desktops.randomAccess),
