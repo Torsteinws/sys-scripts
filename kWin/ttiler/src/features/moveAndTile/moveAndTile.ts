@@ -209,7 +209,7 @@ const shortcuts: Shortcut[] = [
         fn: restoreAllDesktops,
     },
     createMoveAndTileShortcut("u", desktops.spotify),
-    createMoveAndTileShortcut("h", desktops.signal),
+    createMoveAndTileShortcut("i", desktops.signal),
     createMoveAndTileShortcut("o", desktops.settings),
     createMoveAndTileShortcut("p", desktops.vpnAndUtils),
     createMoveAndTileShortcut("j", desktops.browser1),
