@@ -15,7 +15,12 @@ function adjustTileWidth(direction: "left" | "right") {
 
 function resetTileChanges() {
     const leftTile = getTile("left")
-    leftTile.relativeGeometry.width = 0.62
+    const currentWidth = leftTile.relativeGeometry.width
+
+    // Set to 50% if it is in its initial state, otherwise set it back to its initial state
+    const nextWidth = currentWidth === 0.62 ? 0.5 : 0.62
+
+    leftTile.relativeGeometry.width = nextWidth
     leftTile.parent.padding = 7
 }
 
