@@ -82,6 +82,7 @@ function focusCurrentWindow() {
 function syncWindows() {
     clearWindowTracking()
     const firefoxWindows: KWin.Window[] = []
+    const ghosttyWindows: KWin.Window[] = []
     const otherWindows: KWin.Window[] = []
 
     // List of all normal windows (ordered by least visible to most visible)
@@ -111,14 +112,11 @@ function syncWindows() {
                 // Ignore progon vpn, it is not useful for me here
                 // desktops.vpnAndUtils.window = window
                 break
-            case "com.mitchellh.ghostty":
-                desktops.terminal.window = window
-                break
-            case "code_code":
-                desktops.notes.window = window
-                break
             case "org.kde.dolphin":
                 desktops.fileExplorer.window = window
+                break
+            case "com.mitchellh.ghostty":
+                ghosttyWindows.push(window)
                 break
             case "firefox":
                 firefoxWindows.push(window)
@@ -126,6 +124,14 @@ function syncWindows() {
             default:
                 otherWindows.push(window)
                 break
+        }
+    })
+
+    ghosttyWindows.forEach((window) => {
+        if (window.caption === "notes") {
+            desktops.notes.window = window
+        } else {
+            desktops.terminal.window = window
         }
     })
 
