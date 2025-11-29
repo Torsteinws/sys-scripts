@@ -1,3 +1,4 @@
+import forceFirefoxToDesktop from "./features/forceFirefoToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
 import setTileSize from "./features/setTileSize/setTileSize.js"
@@ -6,9 +7,10 @@ import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
 const shortcuts: Shortcut[] = ([] as Shortcut[])
+    .concat(forceFirefoxToDesktop.shortcuts)
     .concat(moveAndTile.shortcuts)
-    .concat(setTileSize.shortcuts)
     .concat(moveTileFocus.shortcuts)
+    .concat(setTileSize.shortcuts)
     .concat(toggleTitlebar.shortcuts)
 
 shortcuts.forEach((shortcut) => {

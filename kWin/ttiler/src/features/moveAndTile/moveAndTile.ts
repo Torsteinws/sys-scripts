@@ -120,7 +120,7 @@ function syncWindows() {
             case "org.kde.dolphin":
                 desktops.fileExplorer.window = window
                 break
-            case "firefox_firefox":
+            case "firefox":
                 firefoxWindows.push(window)
                 break
             default:
@@ -131,21 +131,18 @@ function syncWindows() {
 
     // For each open firefox window
     firefoxWindows.forEach((window) => {
-        switch (window.desktops[0]?.x11DesktopNumber) {
-            case desktops.browser1.index:
-                desktops.browser1.window = window
-                break
-            case desktops.browser2.index:
-                desktops.browser2.window = window
-                break
-            case desktops.browser3.index:
-                desktops.browser3.window = window
-                break
-            case desktops.cheatsheet.index:
-                desktops.cheatsheet.window = window
-                break
-            default:
-                break
+        if (window.caption.endsWith("Personal — Mozilla Firefox")) {
+            desktops.browser1.window = window
+        } else if (window.caption.endsWith("Work — Mozilla Firefox")) {
+            desktops.unknown2.window = window
+        } else if (window.caption.endsWith("Dev — Mozilla Firefox")) {
+            desktops.browser2.window = window
+        } else if (window.caption.endsWith("Documentation — Mozilla Firefox")) {
+            desktops.browser3.window = window
+        } else if (window.caption.endsWith("Cheatsheet — Mozilla Firefox")) {
+            desktops.cheatsheet.window = window
+        } else {
+            otherWindows.push(window)
         }
     })
 
@@ -156,9 +153,6 @@ function syncWindows() {
                 break
             case desktops.unknown1.index:
                 desktops.unknown1.window = window
-                break
-            case desktops.unknown2.index:
-                desktops.unknown2.window = window
                 break
             case desktops.unknown3.index:
                 desktops.unknown3.window = window
