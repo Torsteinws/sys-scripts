@@ -1,3 +1,4 @@
+import betterQuickTile from "./features/betterQuickTile/betterQuickTile.js"
 import forceFirefoxToDesktop from "./features/forceFirefoxToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
@@ -7,6 +8,7 @@ import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
 const shortcuts: Shortcut[] = ([] as Shortcut[])
+    .concat(betterQuickTile.shortcuts)
     .concat(forceFirefoxToDesktop.shortcuts)
     .concat(moveAndTile.shortcuts)
     .concat(moveTileFocus.shortcuts)
