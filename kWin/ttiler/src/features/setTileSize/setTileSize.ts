@@ -13,25 +13,51 @@ function adjustTileWidth(direction: "left" | "right") {
     }
 }
 
-function resetTileChanges() {
+function cycleTileWidth() {
     const leftTile = getTile("left")
     const currentWidth = leftTile.relativeGeometry.width
-
-    // Set to 50% if it is in its initial state, otherwise set it back to its initial state
-    const nextWidth = currentWidth === 0.62 ? 0.5 : 0.62
+    const nextWidth = getNextTileWidth(currentWidth)
 
     leftTile.relativeGeometry.width = nextWidth
     leftTile.parent.padding = 7
 }
 
-function resetTileChangesAllDesktops() {
-    const originalDesktop = workspace.currentDesktop
+function cycleTileWidthAllDesktops() {
+    const initialLeftTile = getTile("left")
+    const initialWidth = initialLeftTile.relativeGeometry.width
+    const nextWidth = getNextTileWidth(initialWidth)
+
+    const initialDesktop = workspace.currentDesktop
     workspace.desktops.forEach((desktop) => {
         workspace.currentDesktop = desktop
-        resetTileChanges()
+        const currentLeftTile = getTile("left")
+        currentLeftTile.relativeGeometry.width = nextWidth
+        currentLeftTile.parent.padding = 7
     })
-    workspace.currentDesktop = originalDesktop
-    utils.showText("Reset all tiling layouts", "dialog-positive")
+    workspace.currentDesktop = initialDesktop
+    utils.showText(`Set all left tiles to ${nextWidth * 100}%`, "dialog-positive")
+}
+
+function getNextTileWidth(currentWidth: number): number {
+    const breakPoints = [0.705, 0.62, 0.5] // Percentage of the screen
+    const defaultBreakPoint = breakPoints[0]!
+
+    let nextWidth = undefined
+    for (let i = 0; i < breakPoints.length; i++) {
+        const breakPoint = breakPoints[i]!
+        const margin = 0.002
+        const min = breakPoint - margin
+        const max = breakPoint + margin
+        const inRange = currentWidth >= min && currentWidth <= max
+        if (inRange) {
+            nextWidth = breakPoints[(i + 1) % breakPoints.length] // Select the next item in the breakpoint list. If at the end, loop back to the first item
+            break
+        }
+    }
+    if (nextWidth === undefined) {
+        nextWidth = defaultBreakPoint
+    }
+    return nextWidth
 }
 
 function adjustTilePaddingAllDesktops(adjustment: "increment" | "decrement") {
@@ -96,29 +122,27 @@ const shortcuts: Shortcut[] = [
         fn: () => adjustTileWidth("right"),
     },
     {
-        title: "setTileSize.resetTileWidth",
-        text: "Reset the tile width on the current virtual desktop",
+        title: "setTileSize.cycleTileWidth",
+        text: "Cycle the tile width on the current virtual desktop",
         keySequence: "Meta+Ctrl+Alt+'",
-        fn: resetTileChanges,
+        fn: cycleTileWidth,
     },
     {
-        title: "setTileSize.resetTileWidthAllDesktops",
+        title: "setTileSize.cycleTileWidthAllDesktops",
         text: "Reset the tile width on all virtual desktops",
         keySequence: "Meta+Ctrl+Alt+*",
-        fn: resetTileChangesAllDesktops,
+        fn: cycleTileWidthAllDesktops,
     },
     {
         title: "setTileSize.incrementPadding",
         text: "Increment the padding in the tiling layout",
         keySequence: "Meta+Ctrl+Alt++",
-        // fn: () => adjustTilePadding("increment"),
         fn: () => adjustTilePaddingAllDesktops("increment"),
     },
     {
         title: "setTileSize.decrementPadding",
         text: "Decrement the padding in the tiling layout",
         keySequence: "Meta+Ctrl+Alt+?",
-        // fn: () => adjustTilePadding("decrement"),
         fn: () => adjustTilePaddingAllDesktops("decrement"),
     },
 ]
