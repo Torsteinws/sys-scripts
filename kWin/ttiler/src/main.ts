@@ -1,4 +1,4 @@
-import forceFirefoxToDesktop from "./features/forceFirefoToDesktop/forceFirefoxToDesktop.js"
+import forceFirefoxToDesktop from "./features/forceFirefoxToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
 import setTileSize from "./features/setTileSize/setTileSize.js"
