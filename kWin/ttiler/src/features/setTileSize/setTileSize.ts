@@ -110,15 +110,27 @@ const shortcuts: Shortcut[] = [
     //     fn: debug,
     // },
     {
-        title: "setTileSize.adjustLeft",
+        title: "setTileSize.adjustLeft1",
         text: "Adjust the tile width in leftward direction",
         keySequence: "Ctrl+Alt+Shift+h",
         fn: () => adjustTileWidth("left"),
     },
     {
-        title: "setTileSize.adjustRight",
+        title: "setTileSize.adjustLeft2",
+        text: "Adjust the tile width in leftward direction",
+        keySequence: "Ctrl+Alt+Shift+Left",
+        fn: () => adjustTileWidth("left"),
+    },
+    {
+        title: "setTileSize.adjustRight1",
         text: "Adjust the tile width in rightward direction",
         keySequence: "Ctrl+Alt+Shift+l",
+        fn: () => adjustTileWidth("right"),
+    },
+    {
+        title: "setTileSize.adjustRight2",
+        text: "Adjust the tile width in rightward direction",
+        keySequence: "Ctrl+Alt+Shift+Right",
         fn: () => adjustTileWidth("right"),
     },
     {
