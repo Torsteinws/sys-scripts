@@ -13,10 +13,14 @@ function onWindowAdded(window: KWin.Window) {
         }
 
         let targetDesktopIndex: undefined | number = undefined
-        if (window.caption.endsWith("Personal — Mozilla Firefox")) {
+        if (window.caption.endsWith("Tools — Mozilla Firefox")) {
+            targetDesktopIndex = 1
+        } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
             targetDesktopIndex = 7
         } else if (window.caption.endsWith("Work — Mozilla Firefox")) {
             targetDesktopIndex = 6
+        } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
+            targetDesktopIndex = 7
         } else if (window.caption.endsWith("Dev — Mozilla Firefox")) {
             targetDesktopIndex = 9
         } else if (window.caption.endsWith("Documentation — Mozilla Firefox")) {

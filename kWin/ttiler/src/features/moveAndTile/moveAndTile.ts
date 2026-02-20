@@ -147,6 +147,8 @@ function syncWindows() {
             desktops.browser3.window = window
         } else if (window.caption.endsWith("Cheatsheet — Mozilla Firefox")) {
             desktops.cheatsheet.window = window
+        } else if (window.caption.endsWith("Tools — Mozilla Firefox")) {
+            desktops.unknown1.window = window
         } else {
             otherWindows.push(window)
         }
