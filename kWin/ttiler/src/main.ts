@@ -2,6 +2,7 @@ import betterQuickTile from "./features/betterQuickTile/betterQuickTile.js"
 import forceFirefoxToDesktop from "./features/forceFirefoxToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
+import retileDesktop from "./features/retileDesktop/retileDesktop.js"
 import setTileSize from "./features/setTileSize/setTileSize.js"
 import toggleTitlebar from "./features/toggleTitlebar/toggleTitlebar.js"
 import type { Shortcut } from "./types/shortcut.js"
@@ -12,6 +13,7 @@ const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(forceFirefoxToDesktop.shortcuts)
     .concat(moveAndTile.shortcuts)
     .concat(moveTileFocus.shortcuts)
+    .concat(retileDesktop.shortcuts)
     .concat(setTileSize.shortcuts)
     .concat(toggleTitlebar.shortcuts)
 
