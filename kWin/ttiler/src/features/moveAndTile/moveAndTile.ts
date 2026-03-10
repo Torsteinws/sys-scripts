@@ -95,7 +95,7 @@ function syncWindows() {
             case "":
                 // Do nothing, this is internal to kde
                 break
-            case "spotify_spotify":
+            case "spotify":
                 desktops.spotify.window = window
                 break
             case "signal":
@@ -108,7 +108,7 @@ function syncWindows() {
                 // Ignore for now
                 // desktops.vpnAndUtils.window = window
                 break
-            case "protonvpn-app":
+            case "proton.vpn.app.gtk":
                 // Ignore progon vpn, it is not useful for me here
                 // desktops.vpnAndUtils.window = window
                 break
