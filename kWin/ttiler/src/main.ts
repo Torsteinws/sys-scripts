@@ -4,6 +4,7 @@ import moveAndTile from "./features/moveAndTile/moveAndTile.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
 import retileDesktop from "./features/retileDesktop/retileDesktop.js"
 import setTileSize from "./features/setTileSize/setTileSize.js"
+import swapTile from "./features/swapTile/swapTile.js"
 import toggleTitlebar from "./features/toggleTitlebar/toggleTitlebar.js"
 import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
@@ -15,6 +16,7 @@ const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(moveTileFocus.shortcuts)
     .concat(retileDesktop.shortcuts)
     .concat(setTileSize.shortcuts)
+    .concat(swapTile.shortcuts)
     .concat(toggleTitlebar.shortcuts)
 
 shortcuts.forEach((shortcut) => {
