@@ -15,19 +15,23 @@ function onWindowAdded(window: KWin.Window) {
 
         let targetDesktopIndex: undefined | number = undefined
         if (window.caption.endsWith("Tools — Mozilla Firefox")) {
-            targetDesktopIndex = 1
-        } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
-            targetDesktopIndex = 7
-        } else if (window.caption.endsWith("Work — Mozilla Firefox")) {
             targetDesktopIndex = 6
         } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
-            targetDesktopIndex = 7
+            targetDesktopIndex = 12
+        } else if (window.caption.endsWith("Work — Mozilla Firefox")) {
+            targetDesktopIndex = 11
+        } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
+            targetDesktopIndex = 12
         } else if (window.caption.endsWith("Dev — Mozilla Firefox")) {
-            targetDesktopIndex = 9
+            targetDesktopIndex = 14
         } else if (window.caption.endsWith("Documentation — Mozilla Firefox")) {
-            targetDesktopIndex = 10
-        } else if (window.caption.endsWith("Cheatsheet — Mozilla Firefox")) {
             targetDesktopIndex = 15
+        } else if (window.caption.endsWith("Videos — Mozilla Firefox")) {
+            targetDesktopIndex = 16
+        } else if (window.caption.endsWith("Projects — Mozilla Firefox")) {
+            targetDesktopIndex = 19
+        } else if (window.caption.endsWith("Cheatsheet — Mozilla Firefox")) {
+            targetDesktopIndex = 20
         }
 
         if (targetDesktopIndex !== undefined) {
