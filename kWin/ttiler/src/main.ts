@@ -1,3 +1,4 @@
+import * as desktopState from "./desktopState.js"
 import betterQuickTile from "./features/betterQuickTile/betterQuickTile.js"
 import forceFirefoxToDesktop from "./features/forceFirefoxToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTile.js"
@@ -9,6 +10,10 @@ import toggleTitlebar from "./features/toggleTitlebar/toggleTitlebar.js"
 import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
+desktopState.setup({
+    ignoreDesktopFileName: ["org.kde.xwaylandvideobridge", "org.qbittorrent.qBittorrent", "proton.vpn.app.gtk"],
+})
+
 const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(betterQuickTile.shortcuts)
     .concat(forceFirefoxToDesktop.shortcuts)
@@ -18,6 +23,7 @@ const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(setTileSize.shortcuts)
     .concat(swapTile.shortcuts)
     .concat(toggleTitlebar.shortcuts)
+    .concat(desktopState.shortcuts)
 
 shortcuts.forEach((shortcut) => {
     const shortcutTitle = `ttiler.${shortcut.title}`
