@@ -1,4 +1,5 @@
 import { desktops, desktopState, type Desktop } from "../../desktopState.js"
+import type { Optional } from "../../types/Optional.js"
 import type { Shortcut } from "../../types/shortcut.js"
 
 const defaultConfig = {
@@ -10,7 +11,7 @@ let config: Config = defaultConfig
 
 function debug() {}
 
-function setup(userConfig?: Partial<Config>) {
+function setup(userConfig?: Optional<Config>) {
     if (userConfig) {
         Object.assign(config, userConfig)
     }

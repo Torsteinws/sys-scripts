@@ -1,3 +1,4 @@
+import type { Optional } from "./types/Optional.js"
 import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
@@ -27,7 +28,7 @@ function debug() {
     })
 }
 
-function setup(userConfig: Partial<Config>) {
+function setup(userConfig: Optional<Config>) {
     if (userConfig) {
         Object.assign(config, userConfig)
     }
