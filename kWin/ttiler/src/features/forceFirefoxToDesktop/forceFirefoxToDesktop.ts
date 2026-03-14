@@ -1,3 +1,4 @@
+import { desktopState } from "../../desktopState.js"
 import type { Shortcut } from "../../types/shortcut.js"
 
 function debug() {}
@@ -45,9 +46,12 @@ function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
     if (!targetDesktop)
         throw `Tried to move window "${window.desktopFileName}" to desktop at "${targetIndex}", but desktop index was out of bounds`
     window.desktops = [targetDesktop]
+    desktopState.resyncWindows()
 }
 
-workspace.windowAdded.connect(onWindowAdded)
+function setup() {
+    workspace.windowAdded.connect(onWindowAdded)
+}
 
 const shortcuts: Shortcut[] = [
     // {
@@ -58,4 +62,4 @@ const shortcuts: Shortcut[] = [
     // },
 ]
 
-export default { shortcuts }
+export default { shortcuts, setup }

@@ -13,6 +13,7 @@ import { utils } from "./utils/index.js"
 desktopState.setup({
     ignoreDesktopFileName: ["org.kde.xwaylandvideobridge", "org.qbittorrent.qBittorrent", "proton.vpn.app.gtk"],
 })
+forceFirefoxToDesktop.setup()
 
 const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(betterQuickTile.shortcuts)
