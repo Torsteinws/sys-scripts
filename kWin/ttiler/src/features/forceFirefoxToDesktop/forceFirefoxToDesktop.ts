@@ -50,7 +50,7 @@ function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
     if (!targetDesktop)
         throw `Tried to move window "${window.desktopFileName}" to desktop at "${targetIndex}", but desktop index was out of bounds`
     window.desktops = [targetDesktop]
-    desktopState.resyncWindows()
+    desktopState.resyncWindow(window)
 }
 
 function setup() {

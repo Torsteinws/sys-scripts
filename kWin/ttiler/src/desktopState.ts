@@ -20,8 +20,9 @@ let windows: KWin.Window[] = []
 
 function debug() {
     desktops.forEach((desk, i) => {
+        print(i, desk.native.name)
         desk.windows.forEach((win) => {
-            print(i, desk.native.name, win.caption)
+            print("    ", win.caption.substring(0, 40) + (win.caption.length > 41 ? "..." : ""))
         })
     })
 }
@@ -45,16 +46,23 @@ function fullSync() {
             rootTile: workspace.rootTile(workspace.activeScreen, workspace.desktops[i]!),
         }
     }
-    resyncWindows()
+    resyncAllWindows()
 }
 
-function resyncWindows() {
+function resyncAllWindows() {
     desktops.forEach((desk) => (desk.windows = []))
     windows = []
 
     workspace.stackingOrder.forEach((win) => {
         addWindow(win)
     })
+}
+
+function resyncWindow(window: KWin.Window) {
+    desktops.forEach((desk) => {
+        desk.windows = desk.windows.filter((win) => win !== window)
+    })
+    addWindow(window)
 }
 
 function addWindow(window: KWin.Window) {
@@ -89,7 +97,7 @@ function removeWindow(window: KWin.Window) {
 }
 
 function onResyncWindowsRequest() {
-    resyncWindows()
+    resyncAllWindows()
     utils.showText("Synced windows", "dialog-positive")
 }
 
@@ -108,9 +116,7 @@ function onWindowRemoved(window: KWin.Window) {
 }
 
 function onDesktopLayoutChanged() {
-    print("Desktop layout changed")
     fullSync()
-    print("Done full sync")
 }
 
 const shortcuts: Shortcut[] = [
@@ -129,7 +135,8 @@ const shortcuts: Shortcut[] = [
 ]
 
 const publicUtils = {
-    resyncWindows,
+    resyncAllWindows: resyncAllWindows,
+    resyncWindow: resyncWindow,
 }
 
 export { setup, shortcuts, desktops, publicUtils as desktopState }
