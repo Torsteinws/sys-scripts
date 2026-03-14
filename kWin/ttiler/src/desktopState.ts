@@ -145,4 +145,4 @@ const publicUtils = {
     resyncWindow: resyncWindow,
 }
 
-export { setup, shortcuts, desktops, publicUtils as desktopState }
+export { setup, shortcuts, type Desktop, desktops, publicUtils as desktopState }
