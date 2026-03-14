@@ -37,6 +37,17 @@ function setup(userConfig: Partial<Config>) {
     workspace.desktopLayoutChanged.connect(onDesktopLayoutChanged)
 }
 
+// ---- Resync windows ----
+
+function onResyncWindowsRequest() {
+    resyncAllWindows()
+    utils.showText("Synced windows", "dialog-positive")
+}
+
+function onDesktopLayoutChanged() {
+    fullSync()
+}
+
 function fullSync() {
     desktops = new Array(workspace.desktops.length)
     for (let i = 0; i < workspace.desktops.length; i++) {
@@ -65,41 +76,7 @@ function resyncWindow(window: KWin.Window) {
     addWindow(window)
 }
 
-function addWindow(window: KWin.Window) {
-    if (!isValidWindow(window)) return
-
-    const desktopNumber = window.desktops[0]!.x11DesktopNumber - 1
-    if (desktopNumber < 0) return
-
-    Array.prototype.push.apply(desktops[desktopNumber]!.windows, [window])
-    Array.prototype.push.apply(windows, [window])
-}
-
-function isValidWindow(window: KWin.Window) {
-    if (!window.normalWindow) return false
-
-    // Do not support windows that are at multiple desktops at once
-    if (window.desktops.length !== 1) return false
-
-    if (config.ignoreEmptyDesktopFilename && !window.desktopFileName) return false
-
-    if (config.ignoreDesktopFileName.indexOf(window.desktopFileName) !== -1) return false
-
-    return true
-}
-
-function removeWindow(window: KWin.Window) {
-    // Since we are already iterating over every window, let's also remove undefined itmes if they exists
-    desktops.forEach((desk) => {
-        desk.windows = desk.windows.filter((win) => win !== window && win !== undefined)
-    })
-    windows = windows.filter((win) => win !== window && win !== undefined)
-}
-
-function onResyncWindowsRequest() {
-    resyncAllWindows()
-    utils.showText("Synced windows", "dialog-positive")
-}
+// ---- Add/Remove window ----
 
 function onWindowAdded(window: KWin.Window) {
     // Quick exit if not valid
@@ -115,9 +92,38 @@ function onWindowRemoved(window: KWin.Window) {
     removeWindow(window)
 }
 
-function onDesktopLayoutChanged() {
-    fullSync()
+function isValidWindow(window: KWin.Window) {
+    if (!window.normalWindow) return false
+
+    // Do not support windows that are at multiple desktops at once
+    if (window.desktops.length !== 1) return false
+
+    if (config.ignoreEmptyDesktopFilename && !window.desktopFileName) return false
+
+    if (config.ignoreDesktopFileName.indexOf(window.desktopFileName) !== -1) return false
+
+    return true
 }
+
+function addWindow(window: KWin.Window) {
+    if (!isValidWindow(window)) return
+
+    const desktopNumber = window.desktops[0]!.x11DesktopNumber - 1
+    if (desktopNumber < 0) return
+
+    Array.prototype.push.apply(desktops[desktopNumber]!.windows, [window])
+    Array.prototype.push.apply(windows, [window])
+}
+
+function removeWindow(window: KWin.Window) {
+    // Since we are already iterating over every window, let's also remove undefined itmes if they exists
+    desktops.forEach((desk) => {
+        desk.windows = desk.windows.filter((win) => win !== window && win !== undefined)
+    })
+    windows = windows.filter((win) => win !== window && win !== undefined)
+}
+
+// ---- Exports ----
 
 const shortcuts: Shortcut[] = [
     {
