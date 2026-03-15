@@ -27,6 +27,11 @@ newWindowOnEmptyDesktop.setup({
         "signal",
         "org.qbittorrent.qBittorrent",
         "proton.vpn.app.gtk",
+        "org.kde.spectacle",
+        "org.kde.kcalc",
+        "org.kde.plasma.emojier",
+        "kcm_kwinrules",
+        "gcr-prompter",
     ],
     desktopPriority: {
         x11DesktopNumber: [2, 3, 4, 1, 5],

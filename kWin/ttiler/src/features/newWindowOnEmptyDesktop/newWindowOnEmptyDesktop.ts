@@ -1,10 +1,10 @@
 import { desktops, desktopState, type Desktop } from "../../desktopState.js"
-import type { Optional } from "../../types/Optional.js"
+import type { Optional } from "../../types/optional.js"
 import type { Shortcut } from "../../types/shortcut.js"
 import { utils } from "../../utils/index.js"
 
 const defaultConfig = {
-    ignoreDesktopFileName: ["org.kde.xwaylandvideobridge"],
+    ignoreDesktopFileName: ["org.kde.xwaylandvideobridge", "org.kde.spectacle", "org.kde.kcalc"],
     desktopPriority: undefined as undefined | { x11DesktopNumber: number[] },
 }
 
