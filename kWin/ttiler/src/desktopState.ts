@@ -1,29 +1,36 @@
-import type { Optional } from "./types/Optional.js"
+import type { Optional } from "./types/optional.js"
 import type { Shortcut } from "./types/shortcut.js"
 import { utils } from "./utils/index.js"
 
 const defaultConfig = {
     ignoreDesktopFileName: ["org.kde.xwaylandvideobridge"],
-    ignoreEmptyDesktopFilename: true,
 }
 
 type Config = typeof defaultConfig
 let config: Config = defaultConfig
 
-type desktop = {
+type Desktop = {
     native: KWin.VirtualDesktop
     windows: KWin.Window[]
     rootTile: KWin.Tile
 }
 
-let desktops: desktop[] = []
+let desktops: Desktop[] = []
 let windows: KWin.Window[] = []
 
 function debug() {
+    const rightPadStr = (srcStr: string, length: number) => {
+        let paddedStr = (srcStr + " ".repeat(length)).substring(0, length - 1)
+        if (srcStr.length > length) {
+            paddedStr = paddedStr.substring(0, length - 1 - 3) + "..."
+        }
+        return paddedStr
+    }
+
     desktops.forEach((desk, i) => {
         print(i, desk.native.name)
         desk.windows.forEach((win) => {
-            print("    ", win.caption.substring(0, 40) + (win.caption.length > 41 ? "..." : ""))
+            print("    ", rightPadStr(win.desktopFileName, 20), " | ", rightPadStr(win.caption, 40))
         })
     })
 }
@@ -99,9 +106,11 @@ function isValidWindow(window: KWin.Window) {
     // Do not support windows that are at multiple desktops at once
     if (window.desktops.length !== 1) return false
 
-    if (config.ignoreEmptyDesktopFilename && !window.desktopFileName) return false
+    const isEmpty = !window.desktopFileName
+    if (isEmpty) return false
 
-    if (config.ignoreDesktopFileName.indexOf(window.desktopFileName) !== -1) return false
+    const inIgnoreList = config.ignoreDesktopFileName.indexOf(window.desktopFileName) !== -1
+    if (inIgnoreList) return false
 
     return true
 }
