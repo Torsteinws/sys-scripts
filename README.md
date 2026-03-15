@@ -11,3 +11,19 @@ Essential Linux scripts for my workflow.
 ```
 
 - Requires qdbus (which is included in qt)
+
+## ttiler
+
+**Requires:**
+
+- [task](https://taskfile.dev/)
+- [node](https://nodejs.org/en)
+
+```bash
+cd kWin/ttiler
+task install
+```
+
+## on login scripts
+
+Add every file in `shell/onLogin` to autostart in KDE system settings
