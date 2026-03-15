@@ -1,9 +1,11 @@
 import { desktops, desktopState, type Desktop } from "../../desktopState.js"
 import type { Optional } from "../../types/Optional.js"
 import type { Shortcut } from "../../types/shortcut.js"
+import { utils } from "../../utils/index.js"
 
 const defaultConfig = {
     ignoreDesktopFileName: ["org.kde.xwaylandvideobridge"],
+    desktopPriority: undefined as undefined | { x11DesktopNumber: number[] },
 }
 
 type Config = typeof defaultConfig
@@ -30,6 +32,8 @@ function onWindowAdded(window: KWin.Window) {
     workspace.activeWindow = window
 
     desktopState.resyncWindow(window)
+
+    utils.showText("=".repeat(70) + "\n\n" + availableDesktop.native.name + "\n\n" + "=".repeat(70))
 }
 
 function isValidWindow(window: KWin.Window) {
@@ -52,6 +56,18 @@ function isValidWindow(window: KWin.Window) {
 }
 
 function findAvailableDesktop() {
+    for (let i = 0; config.desktopPriority?.x11DesktopNumber.length ?? -1 > 0; i++) {
+        const index = (config.desktopPriority?.x11DesktopNumber[i] ?? 0) - 1
+        const inRange = index >= 0 && index < desktops.length
+        if (inRange) {
+            const desktop = desktops[index]
+            const hasSpace = desktop?.windows.length === 0
+            if (hasSpace) {
+                return desktop
+            }
+        }
+    }
+
     for (let i = 0; i < desktops.length; i++) {
         const desktop = desktops[i]
         const isRandom = desktop?.windows.length === 0
@@ -63,18 +79,10 @@ function findAvailableDesktop() {
     return undefined
 }
 
-function moveWindowToIndex(window: KWin.Window, targetIndex: number) {
-    const targetDesktop = workspace.desktops[targetIndex - 1]
-    if (!targetDesktop)
-        throw `Tried to move window "${window.desktopFileName}" to desktop at "${targetIndex}", but desktop index was out of bounds`
-    window.desktops = [targetDesktop]
-    desktopState.resyncWindow(window)
-}
-
 const shortcuts: Shortcut[] = [
     // {
-    //     title: "forceFirefoxToDesktop.Debug",
-    //     text: "Debug functions in forceFirefoxToDesktop.ts",
+    //     title: "newWindowOnEmptyDesktop.Debug",
+    //     text: "Debug functions in newWindowOnEmptyDesktop.ts",
     //     keySequence: "Meta+m",
     //     fn: debug,
     // },

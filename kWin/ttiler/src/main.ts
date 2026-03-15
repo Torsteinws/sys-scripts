@@ -28,6 +28,9 @@ newWindowOnEmptyDesktop.setup({
         "org.qbittorrent.qBittorrent",
         "proton.vpn.app.gtk",
     ],
+    desktopPriority: {
+        x11DesktopNumber: [2, 3, 4, 1, 5],
+    },
 })
 popDesktop.setup()
 
