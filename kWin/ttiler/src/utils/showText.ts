@@ -34,3 +34,5 @@ type SystemIcon =
     | "data-error"
     | "data-success"
     | "data-warning"
+    | "desktop"
+    | "preferences-desktop-plasma"

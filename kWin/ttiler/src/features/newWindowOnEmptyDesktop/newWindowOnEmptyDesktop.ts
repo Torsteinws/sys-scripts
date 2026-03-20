@@ -33,7 +33,7 @@ function onWindowAdded(window: KWin.Window) {
 
     desktopState.resyncWindow(window)
 
-    utils.showText("=".repeat(70) + "\n\n" + availableDesktop.native.name + "\n\n" + "=".repeat(70))
+    utils.showText(availableDesktop.native.name, "preferences-desktop-plasma")
 }
 
 function isValidWindow(window: KWin.Window) {
