@@ -1,4 +1,4 @@
-import { desktopState } from "../../desktopState.js"
+import { desktops, desktopState } from "../../desktopState.js"
 import type { Shortcut } from "../../types/shortcut.js"
 
 function debug() {}
@@ -13,33 +13,38 @@ function onWindowAdded(window: KWin.Window) {
             return
         }
 
-        let targetDesktopIndex: undefined | number = undefined
+        let x11DesktopNumber: undefined | number = undefined
         if (window.caption.endsWith("Tools — Mozilla Firefox")) {
-            targetDesktopIndex = 6
+            x11DesktopNumber = 6
         } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
-            targetDesktopIndex = 12
+            x11DesktopNumber = 12
         } else if (window.caption.endsWith("Work — Mozilla Firefox")) {
-            targetDesktopIndex = 11
+            x11DesktopNumber = 11
         } else if (window.caption.endsWith("Personal — Mozilla Firefox")) {
-            targetDesktopIndex = 12
+            x11DesktopNumber = 12
         } else if (window.caption.endsWith("Dev — Mozilla Firefox")) {
-            targetDesktopIndex = 14
+            x11DesktopNumber = 14
         } else if (window.caption.endsWith("Documentation — Mozilla Firefox")) {
-            targetDesktopIndex = 15
+            x11DesktopNumber = 15
         } else if (window.caption.endsWith("Videos — Mozilla Firefox")) {
-            targetDesktopIndex = 16
+            x11DesktopNumber = 16
         } else if (window.caption.endsWith("Projects — Mozilla Firefox")) {
-            targetDesktopIndex = 19
+            x11DesktopNumber = 19
         } else if (window.caption.endsWith("Cheatsheet — Mozilla Firefox")) {
-            targetDesktopIndex = 20
+            x11DesktopNumber = 20
         }
 
-        if (targetDesktopIndex !== undefined) {
-            moveWindowToIndex(window, targetDesktopIndex)
-            window.noBorder = true
-            window.setMaximize(true, true)
-            window.captionChanged.disconnect(onCaptionChanged)
-        }
+        if (x11DesktopNumber === undefined) return
+
+        const targetDesktop = desktops[x11DesktopNumber - 1]
+        if (targetDesktop === undefined) return
+
+        moveWindowToIndex(window, x11DesktopNumber)
+        workspace.currentDesktop = targetDesktop.native
+        window.noBorder = true
+        window.setMaximize(true, true)
+
+        window.captionChanged.disconnect(onCaptionChanged)
     }
 
     window.captionChanged.connect(onCaptionChanged)
