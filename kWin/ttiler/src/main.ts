@@ -1,5 +1,6 @@
 import * as desktopState from "./desktopState.js"
 import betterQuickTile from "./features/betterQuickTile/betterQuickTile.js"
+import blockDemandsAttentionOnLogin from "./features/blockDemandsAttentionOnLogin/blockDemandsAttentionOnLogin.js"
 import forceFirefoxToDesktop from "./features/forceFirefoxToDesktop/forceFirefoxToDesktop.js"
 import moveAndTile from "./features/moveAndTile/moveAndTileNew.js"
 import moveTileFocus from "./features/moveTileFocus/moveTileFocus.js"
@@ -15,6 +16,7 @@ import { utils } from "./utils/index.js"
 desktopState.setup({
     ignoreDesktopFileName: ["org.kde.xwaylandvideobridge", "org.qbittorrent.qBittorrent", "proton.vpn.app.gtk"],
 })
+blockDemandsAttentionOnLogin.setup()
 forceFirefoxToDesktop.setup()
 newWindowOnEmptyDesktop.setup({
     ignoreDesktopFileName: [
