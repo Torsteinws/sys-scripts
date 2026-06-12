@@ -48,9 +48,17 @@ function isValidWindow(window: KWin.Window) {
     const inIgnoreList = config.ignoreDesktopFileName.indexOf(window.desktopFileName) !== -1
     if (inIgnoreList) return false
 
+    // TODO: Find out if wondow has a window rule defined by the user
+
     // Check if window is spawned by an existing window
     const hasOwner = workspace.stackingOrder.filter((w) => w !== window && w.pid === window.pid).length > 0
     if (hasOwner) return false
+
+    const minWidth = workspace.activeScreen.geometry.width * 0.4
+    const minHeight = workspace.activeScreen.geometry.height * 0.4
+    if (window.height < minHeight || window.width < minWidth) {
+        return false
+    }
 
     return true
 }
