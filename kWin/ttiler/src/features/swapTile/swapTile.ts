@@ -1,20 +1,18 @@
 import type { Shortcut } from "../../types/shortcut.js"
+import { utils } from "../../utils/index.js"
 
 function swapTile(direction: "horizontal" | "vertical") {
     if (direction === "vertical") throw "Vertical swap of windows is not implemented"
 
-    const screen = workspace.activeScreen
-    const tileManager = workspace.tilingForScreen(screen)
-
-    const leftTile = tileManager.bestTileForPosition(screen.geometry.left, screen.geometry.top)
-    const rightTile = tileManager.bestTileForPosition(screen.geometry.right, screen.geometry.top)
+    const tiles = utils.getCurrentTiles()
+    if (!tiles.exists) return
 
     // Ensure arrays are copied by value (not reference)
-    const leftWindows = leftTile.windows.slice()
-    const rightWindows = rightTile.windows.slice()
+    const leftWindows = tiles.left.windows.slice()
+    const rightWindows = tiles.right.windows.slice()
 
-    leftWindows.forEach((win) => (win.tile = rightTile))
-    rightWindows.forEach((win) => (win.tile = leftTile))
+    leftWindows.forEach((win) => (win.tile = tiles.right))
+    rightWindows.forEach((win) => (win.tile = tiles.left))
 }
 
 const shortcuts: Shortcut[] = [

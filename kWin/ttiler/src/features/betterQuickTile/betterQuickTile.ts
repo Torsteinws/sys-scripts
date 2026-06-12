@@ -1,14 +1,13 @@
 import type { Shortcut } from "../../types/shortcut.js"
+import { getCurrentTiles } from "../../utils/getCurrentTiles.js"
 
 function debug() {}
 
 function quickTile(direction: "left" | "right") {
-    const screen = workspace.activeScreen
-    const tileManager = workspace.tilingForScreen(screen)
-    const leftTile = tileManager.bestTileForPosition(screen.geometry.left, screen.geometry.top)
-    const rightTile = tileManager.bestTileForPosition(screen.geometry.right, screen.geometry.top)
+    const tiles = getCurrentTiles()
+    if (!tiles.exists) return
 
-    workspace.activeWindow.tile = direction === "left" ? leftTile : rightTile
+    workspace.activeWindow.tile = direction === "left" ? tiles.left : tiles.right
     workspace.activeWindow.noBorder = false
 }
 

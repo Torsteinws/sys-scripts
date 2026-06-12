@@ -1,16 +1,15 @@
 import type { Shortcut } from "../../types/shortcut.js"
+import { utils } from "../../utils/index.js"
 
 function debug() {}
 
 function moveFocus(direction: "left" | "right") {
-    const screen = workspace.activeScreen
-    const tileManager = workspace.tilingForScreen(screen)
-    const leftTile = tileManager.bestTileForPosition(screen.geometry.left, screen.geometry.top)
-    const rightTile = tileManager.bestTileForPosition(screen.geometry.right, screen.geometry.top)
+    const tiles = utils.getCurrentTiles()
+    if (!tiles.exists) return
 
-    const leftWin = leftTile.windows[0]
-    const rightWin = rightTile.windows[0]
-    if (leftWin === undefined || rightWin === undefined) return print("Did not find two windows to move focus between")
+    const leftWin = tiles.left.windows[0]
+    const rightWin = tiles.right.windows[0]
+    if (!leftWin || !rightWin) return print("Did not find two windows to move focus between")
 
     workspace.activeWindow = direction === "left" ? leftWin : rightWin
 }

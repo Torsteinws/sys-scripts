@@ -4,36 +4,44 @@ import { utils } from "../../utils/index.js"
 function debug() {}
 
 function adjustTileWidth(direction: "left" | "right") {
-    const leftTile = getTile("left")
+    const tiles = utils.getCurrentTiles()
+    if (!tiles.exists) return
+
     const delta = 0.015
     if (direction === "left") {
-        leftTile.relativeGeometry.width -= delta
+        tiles.left.relativeGeometry.width -= delta
     } else {
-        leftTile.relativeGeometry.width += delta
+        tiles.left.relativeGeometry.width += delta
     }
 }
 
 function cycleTileWidth() {
-    const leftTile = getTile("left")
-    const currentWidth = leftTile.relativeGeometry.width
+    const tiles = utils.getCurrentTiles()
+    if (!tiles.exists) return
+
+    const currentWidth = tiles.left.relativeGeometry.width
     const nextWidth = getNextTileWidth(currentWidth)
 
-    leftTile.relativeGeometry.width = nextWidth
+    tiles.left.relativeGeometry.width = nextWidth
 }
 
 function cycleTileWidthAllDesktops() {
-    const initialLeftTile = getTile("left")
-    const initialWidth = initialLeftTile.relativeGeometry.width
+    const initialTiles = utils.getCurrentTiles()
+    if (!initialTiles.exists) return
+
+    const initialWidth = initialTiles.left.relativeGeometry.width
     const nextWidth = getNextTileWidth(initialWidth)
 
-    const initialDesktop = workspace.currentDesktop
     workspace.desktops.forEach((desktop) => {
-        workspace.currentDesktop = desktop
-        const currentLeftTile = getTile("left")
-        currentLeftTile.relativeGeometry.width = nextWidth
-        // currentLeftTile.parent.padding = 7
+        workspace.screens.forEach((screen) => {
+            const rootTile = workspace.rootTile(screen, desktop)
+            const leftTile = rootTile.tiles[0]
+            if (leftTile) {
+                leftTile.relativeGeometry.width = nextWidth
+            }
+        })
     })
-    workspace.currentDesktop = initialDesktop
+
     utils.showText(`Set all left tiles to ${nextWidth * 100}%`, "dialog-positive")
 }
 
@@ -92,13 +100,6 @@ function getRootTiles() {
         workspace.currentDesktop = originalDesktop
     }
     return rootTiles
-}
-
-function getTile(location: "left" | "right") {
-    const screen = workspace.activeScreen
-    const geometricX = location === "left" ? screen.geometry.left : screen.geometry.right
-    const tileManager = workspace.tilingForScreen(screen)
-    return tileManager.bestTileForPosition(geometricX, screen.geometry.top)
 }
 
 const shortcuts: Shortcut[] = [

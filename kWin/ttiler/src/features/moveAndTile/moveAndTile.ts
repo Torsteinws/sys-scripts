@@ -8,18 +8,15 @@ function moveAndTile(srcDesktop: DesktopEntry) {
     if (srcDesktop.window === undefined) return print(`Did not find any window on "${srcDesktop.name}". Exiting...`)
     if (!srcDesktop.window.moveable) return print(`Can't move window away from "${srcDesktop.name}. Exiting...`)
 
+    const tiles = utils.getCurrentTiles()
+    if (!tiles.exists) return
+
     // Move window to current desktop
     srcDesktop.window.desktops = [workspace.currentDesktop]
 
-    // Find tile layout
-    const screen = workspace.activeScreen
-    const tileManager = workspace.tilingForScreen(screen)
-    const leftTile = tileManager.bestTileForPosition(screen.geometry.left, screen.geometry.top)
-    const rightTile = tileManager.bestTileForPosition(screen.geometry.right, screen.geometry.top)
-
     // Tile current window to the right, tile source window to the left
-    workspace.activeWindow.tile = leftTile
-    srcDesktop.window.tile = rightTile
+    workspace.activeWindow.tile = tiles.left
+    srcDesktop.window.tile = tiles.right
 
     workspace.activeWindow.noBorder = false
     srcDesktop.window.noBorder = false
