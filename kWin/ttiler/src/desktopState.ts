@@ -133,15 +133,31 @@ function removeWindow(window: KWin.Window) {
     windows = windows.filter((win) => win !== window && win !== undefined)
 }
 
+// ---- Other ----
+
+function forEachWindow(callback: (window: KWin.Window, desktop: Desktop) => void) {
+    for (let i = 0; i < desktops.length; i++) {
+        const desk = desktops[i]
+        if (!desk) continue
+
+        for (let j = 0; j < desk.windows.length; j++) {
+            const win = desk.windows[j]
+            if (!win) continue
+
+            callback(win, desk)
+        }
+    }
+}
+
 // ---- Exports ----
 
 const shortcuts: Shortcut[] = [
-    {
-        title: "desktopState.Debug",
-        text: "Debug desktopState",
-        keySequence: "Meta+m",
-        fn: debug,
-    },
+    // {
+    //     title: "desktopState.Debug",
+    //     text: "Debug desktopState",
+    //     keySequence: "Meta+m",
+    //     fn: debug,
+    // },
     {
         title: "desktopState.resyncWindows",
         text: "Resync windows",
@@ -153,6 +169,7 @@ const shortcuts: Shortcut[] = [
 const publicUtils = {
     resyncAllWindows: resyncAllWindows,
     resyncWindow: resyncWindow,
+    forEachWindow: forEachWindow,
 }
 
 export { setup, shortcuts, type Desktop, desktops, publicUtils as desktopState }
