@@ -19,7 +19,6 @@ function cycleTileWidth() {
     const nextWidth = getNextTileWidth(currentWidth)
 
     leftTile.relativeGeometry.width = nextWidth
-    leftTile.parent.padding = 7
 }
 
 function cycleTileWidthAllDesktops() {
@@ -32,7 +31,7 @@ function cycleTileWidthAllDesktops() {
         workspace.currentDesktop = desktop
         const currentLeftTile = getTile("left")
         currentLeftTile.relativeGeometry.width = nextWidth
-        currentLeftTile.parent.padding = 7
+        // currentLeftTile.parent.padding = 7
     })
     workspace.currentDesktop = initialDesktop
     utils.showText(`Set all left tiles to ${nextWidth * 100}%`, "dialog-positive")
