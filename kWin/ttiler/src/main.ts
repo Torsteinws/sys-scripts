@@ -25,15 +25,12 @@ newWindowOnEmptyDesktop.setup({
         "systemsettings",
         "com.mitchellh.ghostty",
         "org.kde.dolphin",
-        "spotify",
+        "spotify_spotify",
         "signal",
         "org.qbittorrent.qBittorrent",
         "proton.vpn.app.gtk",
         "org.kde.spectacle",
-        "org.kde.kcalc",
-        "org.kde.plasma.emojier",
-        "kcm_kwinrules",
-        "gcr-prompter",
+        "org.kde.kdeconnect.daemon",
     ],
     desktopPriority: {
         x11DesktopNumber: [2, 3, 4, 1, 5],
@@ -43,6 +40,7 @@ popDesktop.setup()
 
 const shortcuts: Shortcut[] = ([] as Shortcut[])
     .concat(betterQuickTile.shortcuts)
+    .concat(blockDemandsAttentionOnLogin.shortcuts)
     .concat(forceFirefoxToDesktop.shortcuts)
     .concat(moveAndTile.shortcuts)
     .concat(moveTileFocus.shortcuts)
