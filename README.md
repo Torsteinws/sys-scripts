@@ -18,6 +18,12 @@ Essential Linux scripts for my workflow.
 ln --symbolic --force "$(pwd)/shell/actions/toggle-bluetooth-connection.sh" "$HOME/bin/toggle-bluetooth-connection.sh"
 ```
 
+## toggle-theme
+
+```bash
+ln --symbolic --force "$(pwd)/shell/actions/toggle-theme.sh" "$HOME/bin/toggle-theme.sh"
+```
+
 ## ttiler
 
 **Requires:**
