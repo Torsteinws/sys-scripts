@@ -12,7 +12,7 @@ function setup() {
 function onWindowAdded(window: KWin.Window) {
     const currentTime = new Date()
     const timeDiffMs = currentTime.getTime() - loginTime.getTime()
-    if (timeDiffMs > 60_000) {
+    if (timeDiffMs > 90_000) {
         workspace.windowAdded.disconnect(onWindowAdded)
         return
     }
